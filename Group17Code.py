@@ -4,8 +4,6 @@ import os
 import subprocess
 from time import sleep
 
-#Varaible Hard-Coded Values
-number_deauth_packets = 20
 
 if os.geteuid() != 0:
     print("\nThis script requires you to run it with root privileges.\n")
