@@ -1,0 +1,28 @@
+
+#commands to run
+ifconfig <iface> down
+ifconfig <iface> inet 192.168.2.1 netmask 255.255.255.0
+ifconfig <iface> up
+
+#used in routing the internet
+route add -net 192.168.2.0 netmask 255.255.255.0 gw 192.168.2.1
+
+Simple for demo
+#iptables -t nat -A POSTROUTING -s 192.168.2.0/24 ! -d 192.168.2.0/24  -j MASQUERADE
+
+#Actually routes the internet through the two interfaces 
+iptables -t nat -A POSTROUTING --out-interface wlan1 -j MASQUERADE
+iptables -A FORWARD --in-interface wlan0 -j ACCEPT
+
+# allow for ipv4 forwarding through NAT if not already allowed
+# sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+
+#note assumes files are in local directory and are named as such
+#-C specifies filepath -d is for debugging and not necessary in release but nice for
+#testing purposes
+dnsmasq -C dnsmasq.conf -d
+
+#Run the AP server with config file
+hostapd fakeAP.conf
+
+
